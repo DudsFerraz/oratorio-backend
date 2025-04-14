@@ -1,18 +1,34 @@
 package com.oratorio.springBackEnd.Models.Oratorio;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Oratorio {
-    //private final int id;
-    private final LocalDate dataInicio;
-    private final LocalDate dataFim;
-    private final Set<Dia> dias;
-    private final Set<Oratoriano> oratorianos;
-    private final Set<Voluntario> voluntarios;
+//getPresencas
+@Entity
+public class AnoDeOratorio implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    public Oratorio(LocalDate dataInicio, LocalDate dataFim) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
+    private Set<Dia> dias;
+    private Set<Oratoriano> oratorianos;
+    private Set<Voluntario> voluntarios;
+
+    public AnoDeOratorio() {}
+
+    public AnoDeOratorio(LocalDate dataInicio, LocalDate dataFim) {
         if (dataInicio == null || dataFim == null) throw new IllegalArgumentException("Data nula");
         if (!dataInicio.isBefore(dataFim)) throw new IllegalArgumentException("Datas invalidas");
         this.dataInicio = dataInicio;
@@ -27,7 +43,7 @@ public class Oratorio {
     private void setDatas(LocalDate dataInicio, LocalDate dataFim) {
         LocalDate currentDate = dataInicio;
         while (!currentDate.isAfter(dataFim)) {
-            dias.add(new Dia(currentDate));
+            dias.add(new Dia(currentDate,this));
             currentDate = currentDate.plusDays(7);
         }
     }
@@ -41,8 +57,8 @@ public class Oratorio {
 
         dias.remove(diaToRemove);
     }
-    public void getAndSetPreviousOratorianos(Oratorio previousOratorio) {
-        this.oratorianos.addAll(previousOratorio.getOratorianos());
+    public void getAndSetPreviousOratorianos(AnoDeOratorio previousAnoDeOratorio) {
+        this.oratorianos.addAll(previousAnoDeOratorio.getOratorianos());
     }
     public void registraOratoriano(String nome) {
         oratorianos.add(new Oratoriano(nome));
@@ -55,8 +71,8 @@ public class Oratorio {
 
         if(!oratorianos.remove(oratoriano)) throw new IllegalArgumentException("Oratoriano nao registrado");
     }
-    public void getAndSetPreviousVoluntarios(Oratorio previousOratorio) {
-        this.voluntarios.addAll(previousOratorio.getVoluntarios());
+    public void getAndSetPreviousVoluntarios(AnoDeOratorio previousAnoDeOratorio) {
+        this.voluntarios.addAll(previousAnoDeOratorio.getVoluntarios());
     }
     public void registraVoluntario(String nome) {
         voluntarios.add(new Voluntario(nome));
@@ -212,11 +228,12 @@ public class Oratorio {
     }
     public List<Voluntario> getVoluntariosSortedPresencas(boolean reversed) {
         List<Voluntario> voluntariosPresencas = new ArrayList<>(voluntarios);
+        Comparator<Voluntario> comparator = Comparator.comparing(o -> o.getNumeroPresencasAno(this));
 
         if(reversed){
-            voluntariosPresencas.sort(Comparator.comparing(Voluntario::getPresencas));
+            voluntariosPresencas.sort(comparator);
         }else{
-            voluntariosPresencas.sort(Comparator.comparing(Voluntario::getPresencas).reversed());
+            voluntariosPresencas.sort(comparator.reversed());
         }
 
         return voluntariosPresencas;

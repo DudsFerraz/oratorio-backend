@@ -1,20 +1,35 @@
 package com.oratorio.springBackEnd.Models.Oratorio;
 
 
+import jakarta.persistence.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Dia {
-    private final LocalDate date;
-    private final Set<Oratoriano> oratorianos;
-    private final Set<Voluntario> voluntarios;
+@Entity
+public class Dia implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    public Dia(LocalDate date) {
+    @Id
+    private LocalDate date;
+
+    @ManyToOne
+    private  AnoDeOratorio anoDeOratorio;
+    private Set<Oratoriano> oratorianos;
+    private Set<Voluntario> voluntarios;
+
+    public Dia(){}
+
+    public Dia(LocalDate date, AnoDeOratorio anoDeOratorio) {
         if (date == null) throw new IllegalArgumentException("Data nula");
         this.date = date;
         this.oratorianos = new HashSet<>();
         this.voluntarios = new HashSet<>();
+        this.anoDeOratorio = anoDeOratorio;
     }
     public void addOratoriano(Oratoriano oratoriano) {
         if (oratoriano == null) throw new IllegalArgumentException("Oratoriano nulo");
@@ -55,7 +70,12 @@ public class Dia {
     public List<Voluntario> getVoluntarios() {
         return new ArrayList<>(voluntarios);
     }
-
+    public AnoDeOratorio getAnoDeOratorio() {
+        return anoDeOratorio;
+    }
+    public LocalDate getId(){
+        return getDate();
+    }
 
 
     @Override

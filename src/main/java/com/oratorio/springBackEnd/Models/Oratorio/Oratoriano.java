@@ -1,38 +1,56 @@
 package com.oratorio.springBackEnd.Models.Oratorio;
 
 
+import com.oratorio.springBackEnd.Models.Documentos.CPF;
 import com.oratorio.springBackEnd.Models.Oratorio.FichaMedica.FichaMedica;
+import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
+import java.util.*;
 
-//criar setFichaMedia
-public class Oratoriano {
+//getPresencas
+@Entity
+public class Oratoriano implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
     private String nome;
-    private final int id;
-    private LocalDate dataDeNascimento;
-    private FichaMedica fichaMedica;
-    private int presencas;
 
+    @Column
+    private LocalDate dataDeNascimento;
+
+    @OneToOne//cascade?
+    private FichaMedica fichaMedica;
+
+    @OneToMany(mappedBy = "oratoriano")
+    private Set<PresencaOratoriano> presencas;
+
+    public Oratoriano() {}
     public Oratoriano(String nome) {
         setNome(nome);
-        this.id = OratorianoIdGenerator.getId();
         this.dataDeNascimento = null;
         this.fichaMedica = null;
-        this.presencas = 0;
+        this.presencas = new HashSet<>();
     }
-
     public Oratoriano(String nome, LocalDate dataDeNascimento) {
         this(nome);
         setDataDeNascimento(dataDeNascimento);
     }
+
+
     public boolean podePiscina(){
         if(fichaMedica == null) return false;
         return fichaMedica.podePiscina();
     }
-
     @Override
     public String toString(){
         String piscina;
@@ -47,24 +65,24 @@ public class Oratoriano {
             return String.format("""
                 %s (Oratoriano) | ID: %d
                 Data de nascimento: ? - ? anos
-                Presencas: %d | Piscina: %s
+                Presencas totais: %d | Piscina: %s
                 """
-                    ,nome,id,presencas,piscina);
+                    ,nome,id,presencas.size(),piscina);
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return String.format("""
                 %s (Oratoriano) | ID: %d
                 Data de nascimento: %s - %d anos
-                Presencas: %d | Piscina: %s
+                Presencas totais: %d | Piscina: %s
                 """
-                ,nome,id,dataDeNascimento.format(dtf),this.idade(),presencas,piscina);
+                ,nome,id,dataDeNascimento.format(dtf),this.idade(),presencas.size(),piscina);
     }
-    public void addPresenca(){
-        this.presencas++;
+    public void addPresenca(Dia dia){
+        presencas.add(new PresencaOratoriano(this,dia));
     }
-    public void removePresenca(){
-        this.presencas--;
+    public void removePresenca(PresencaOratoriano presenca){
+        presencas.remove(presenca);
     }
     public int idade(){
         if (this.dataDeNascimento == null) return -1;
@@ -125,8 +143,24 @@ public class Oratoriano {
     public FichaMedica getFichaMedica() {
         return fichaMedica;
     }
-    public int getPresencas() {
-        return presencas;
+    public List<PresencaOratoriano> getPresencasTotais() {
+        return new ArrayList<>(presencas);
+    }
+    public int getNumeroPresencasTotais(){
+        List<PresencaOratoriano> presencasTotais = getPresencasTotais();
+        return presencasTotais.size();
+    }
+    public List<PresencaOratoriano> getPresencasAno(AnoDeOratorio anoDeOratorio) {
+        List<PresencaOratoriano> presencasAno = new ArrayList<>();
+        for (PresencaOratoriano presenca : presencas) {
+            if(presenca.getDia().getAnoDeOratorio().equals(anoDeOratorio)) presencasAno.add(presenca);
+        }
+
+        return presencasAno;
+    }
+    public int getNumeroPresencasAno(AnoDeOratorio anoDeOratorio) {
+        List<PresencaOratoriano> presencasAno = getPresencasAno(anoDeOratorio);
+        return presencasAno.size();
     }
 
     @Override

@@ -1,26 +1,48 @@
 package com.oratorio.springBackEnd.Models.Oratorio;
 
+import jakarta.persistence.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
+import java.util.*;
 
-public class Voluntario {
+//getPresencas
+@Entity
+public class Voluntario implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    //id gerado automaticamente pelo postgre
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    //coluna not null
+    @Column(nullable = false)
     private String nome;
-    private final int id;
-    private LocalDate dataDeNascimento;
-    private int presencas;
 
+    //coluna sem constraints
+    @Column
+    private LocalDate dataDeNascimento;
+
+    //relacao OneToMany com a entidade PresencaVoluntario //mappedBy indica que o outro lado e dono da relacao
+    @OneToMany(mappedBy = "voluntario")
+    private Set<PresencaVoluntario> presencas;
+
+    public Voluntario() {}
     public Voluntario(String nome) {
         setNome(nome);
-        this.id = VoluntarioIdGenerator.getId();
         this.dataDeNascimento = null;
-        this.presencas = 0;
+        this.presencas = new HashSet<>();
     }
     public Voluntario(String nome, LocalDate dataDeNascimento) {
         this(nome);
         setDataDeNascimento(dataDeNascimento);
     }
+
 
 
     @Override
@@ -29,23 +51,23 @@ public class Voluntario {
             return String.format("""
                 %s (Voluntário)| ID: %d
                 Data de nascimento: ? - ? anos
-                Presencas: %d
-                """, nome, id, presencas);
+                Presencas totais: %d
+                """, nome, id, presencas.size());
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return String.format("""
                 %s (Voluntário) | ID: %d
                 Data de nascimento: %s - %d anos
-                Presencas: %d
+                Presencas totais: %d
                 """,
-                nome, id, dataDeNascimento.format(dtf), this.idade(), presencas);
+                nome, id, dataDeNascimento.format(dtf), this.idade(), presencas.size());
     }
-    public void addPresenca() {
-        this.presencas++;
+    public void addPresenca(Dia dia) {
+        presencas.add(new PresencaVoluntario(this,dia));
     }
-    public void removePresenca() {
-        this.presencas--;
+    public void removePresenca(PresencaVoluntario presenca) {
+        presencas.remove(presenca);
     }
     public int idade() {
         if (this.dataDeNascimento == null) return -1;
@@ -63,14 +85,30 @@ public class Voluntario {
     public String getNome() {
         return nome;
     }
-    public int getId() {
+    public long getId() {
         return id;
     }
     public LocalDate getDataDeNascimento() {
         return dataDeNascimento;
     }
-    public int getPresencas() {
-        return presencas;
+    public List<PresencaVoluntario> getPresencasTotais() {
+        return new ArrayList<>(presencas);
+    }
+    public int getNumeroPresencasTotais(){
+        List<PresencaVoluntario> presencasTotais = getPresencasTotais();
+        return presencasTotais.size();
+    }
+    public List<PresencaVoluntario> getPresencasAno(AnoDeOratorio anoDeOratorio) {
+        List<PresencaVoluntario> presencasAno = new ArrayList<>();
+        for (PresencaVoluntario presenca : presencas) {
+            if(presenca.getDia().getAnoDeOratorio().equals(anoDeOratorio)) presencasAno.add(presenca);
+        }
+
+        return presencasAno;
+    }
+    public int getNumeroPresencasAno(AnoDeOratorio anoDeOratorio) {
+        List<PresencaVoluntario> presencasAno = getPresencasAno(anoDeOratorio);
+        return presencasAno.size();
     }
 
     @Override

@@ -2,7 +2,13 @@ package com.oratorio.springBackEnd.Models.Oratorio.FichaMedica;
 
 import com.oratorio.springBackEnd.Models.Documentos.CPF;
 import com.oratorio.springBackEnd.Models.Oratorio.Oratoriano;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,7 +16,14 @@ import java.util.List;
 import java.util.Set;
 
 //refatorar List<> para Set<>
-public class FichaMedica {
+@Entity
+public class FichaMedica implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final long id;
     private final Oratoriano oratoriano;
     private LocalDate dataDeNascimento;
     private final Endereco endereco;
@@ -19,7 +32,7 @@ public class FichaMedica {
     private final AutorizacaoPiscina autorizacaoPiscina;
     private final Set<Responsavel> responsaveis;
 
-
+    public FichaMedica() {}
     public FichaMedica(Oratoriano oratoriano, LocalDate dataDeNascimento, String CEP, String cidade, String bairro,
                        String rua, String numero, String telefone, String escola, boolean sabeNadar, boolean aptoAPiscina,
                        String nomeRes, CPF cpfRes, String parentescoRes, String assinadoPor, LocalDate date) {
@@ -45,7 +58,6 @@ public class FichaMedica {
         Responsavel temp = getResponsavelbyNome(assinadoPor);
         if(temp!=null) autorizacaoPiscina.setAssinadoPor(temp);
     }
-
     public FichaMedica(Oratoriano oratoriano, LocalDate dataDeNascimento, String CEP, String cidade, String bairro,
                        String rua, String numero, String telefone, String escola, boolean sabeNadar, boolean aptoAPiscina,
                        String nomeRes, CPF cpfRes, String parentescoRes, String nomeRes2, CPF cpfRes2,
@@ -57,7 +69,6 @@ public class FichaMedica {
         Responsavel temp = getResponsavelbyNome(assinadoPor);
         if(temp!=null) autorizacaoPiscina.setAssinadoPor(temp);
     }
-
     public FichaMedica(Oratoriano oratoriano, LocalDate dataDeNascimento, String CEP, String cidade, String bairro,
                        String rua, String numero, String telefone, String escola, boolean sabeNadar, boolean aptoAPiscina,
                        String nomeRes, CPF cpfRes, String parentescoRes, String nomeRes2, CPF cpfRes2,
