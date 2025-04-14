@@ -1,6 +1,6 @@
-﻿package com.oratorio.springBackEnd.Models.Oratorio;
+﻿package com.oratorio.springBackEnd.Oratorio.Oratoriano;
 
-import com.oratorio.springBackEnd.Models.Ids.PresencaOratorianoId;
+import com.oratorio.springBackEnd.Oratorio.Dia.Dia;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

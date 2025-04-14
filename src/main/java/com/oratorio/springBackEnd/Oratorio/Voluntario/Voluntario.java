@@ -1,5 +1,7 @@
-package com.oratorio.springBackEnd.Models.Oratorio;
+package com.oratorio.springBackEnd.Oratorio.Voluntario;
 
+import com.oratorio.springBackEnd.Oratorio.AnoDeOratorio.AnoDeOratorio;
+import com.oratorio.springBackEnd.Oratorio.Dia.Dia;
 import jakarta.persistence.*;
 
 import java.io.Serial;

@@ -1,10 +1,10 @@
-package com.oratorio.springBackEnd.Models.Oratorio;
+package com.oratorio.springBackEnd.Oratorio.AnoDeOratorio;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.oratorio.springBackEnd.Oratorio.Dia.Dia;
+import com.oratorio.springBackEnd.Oratorio.Oratoriano.Oratoriano;
+import com.oratorio.springBackEnd.Oratorio.Voluntario.Voluntario;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,10 +20,20 @@ public class AnoDeOratorio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false)
     private LocalDate dataInicio;
+
+    @Column(nullable = false)
     private LocalDate dataFim;
+
+    @OneToMany(mappedBy = "anoDeOratorio")
     private Set<Dia> dias;
+
+    @OneToMany
     private Set<Oratoriano> oratorianos;
+
+    @OneToMany
     private Set<Voluntario> voluntarios;
 
     public AnoDeOratorio() {}
@@ -40,6 +50,9 @@ public class AnoDeOratorio implements Serializable {
 
         setDatas(this.dataInicio, this.dataFim);
     }
+
+
+
     private void setDatas(LocalDate dataInicio, LocalDate dataFim) {
         LocalDate currentDate = dataInicio;
         while (!currentDate.isAfter(dataFim)) {
@@ -47,6 +60,9 @@ public class AnoDeOratorio implements Serializable {
             currentDate = currentDate.plusDays(7);
         }
     }
+
+
+
     public void removeDia(LocalDate date) {
         if(date == null) throw new IllegalArgumentException("Data nula");
         Dia diaToRemove = null;
@@ -158,11 +174,12 @@ public class AnoDeOratorio implements Serializable {
     }
     public List<Oratoriano> getOratorianosSortedPresencas(boolean reversed) {
         List<Oratoriano> oratorianosPresencas = new ArrayList<>(oratorianos);
+        Comparator<Oratoriano> comparator = Comparator.comparing(o -> o.getNumeroPresencasAno(this));
 
         if(reversed){
-            oratorianosPresencas.sort(Comparator.comparing(Oratoriano::getPresencas));
+            oratorianosPresencas.sort(comparator);
         }else{
-            oratorianosPresencas.sort(Comparator.comparing(Oratoriano::getPresencas).reversed());
+            oratorianosPresencas.sort(comparator.reversed());
         }
 
         return oratorianosPresencas;
@@ -250,5 +267,21 @@ public class AnoDeOratorio implements Serializable {
     public int getVoluntariosCount() {
         return voluntarios.size();
     }
+    public long getId() {
+        return id;
+    }
 
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AnoDeOratorio that = (AnoDeOratorio) o;
+        return getId() == that.getId();
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
 }

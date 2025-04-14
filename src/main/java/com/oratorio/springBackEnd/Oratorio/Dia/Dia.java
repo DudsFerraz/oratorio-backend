@@ -1,6 +1,9 @@
-package com.oratorio.springBackEnd.Models.Oratorio;
+package com.oratorio.springBackEnd.Oratorio.Dia;
 
 
+import com.oratorio.springBackEnd.Oratorio.AnoDeOratorio.AnoDeOratorio;
+import com.oratorio.springBackEnd.Oratorio.Oratoriano.Oratoriano;
+import com.oratorio.springBackEnd.Oratorio.Voluntario.Voluntario;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -18,8 +21,12 @@ public class Dia implements Serializable {
     private LocalDate date;
 
     @ManyToOne
-    private  AnoDeOratorio anoDeOratorio;
+    private AnoDeOratorio anoDeOratorio;
+
+    @OneToMany
     private Set<Oratoriano> oratorianos;
+
+    @OneToMany
     private Set<Voluntario> voluntarios;
 
     public Dia(){}

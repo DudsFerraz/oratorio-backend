@@ -1,14 +1,24 @@
-package com.oratorio.springBackEnd.Models.Documentos;
+package com.oratorio.springBackEnd.Documentos;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
-public class CPF {
+@Embeddable
+public class CPF implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
+    public String fullCpf;
     public String digits;
     public String verificadores;
-    public String fullCpf;
 
+    public CPF(){}
     public CPF(String cpf) {
         cpf = cpf.replaceAll("\\.","").replaceAll("-","");
         if(!isCPF(cpf)) throw new IllegalArgumentException("CPF invalido");

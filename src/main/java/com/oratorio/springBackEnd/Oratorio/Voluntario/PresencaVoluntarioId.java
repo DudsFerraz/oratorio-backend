@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Models.Ids;
+﻿package com.oratorio.springBackEnd.Oratorio.Voluntario;
 
 import jakarta.persistence.Embeddable;
 

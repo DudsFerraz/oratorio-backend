@@ -1,6 +1,15 @@
-package com.oratorio.springBackEnd.Models.Oratorio.FichaMedica;
+package com.oratorio.springBackEnd.Oratorio.Oratoriano;
 
-public class DadosSaude {
+import jakarta.persistence.Embeddable;
+
+import java.io.Serial;
+import java.io.Serializable;
+
+@Embeddable
+class DadosSaude implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String acompanhamentoMedico;
     private String restricaoAtividadeFisica;
     private String medicamentos;
@@ -11,6 +20,8 @@ public class DadosSaude {
     private String outrosProblemas;
     private String infoAdicionais;
 
+
+    public DadosSaude() {}
     public DadosSaude(String acompanhamentoMedico, String restricaoAtividadeFisica, String medicamentos,
                       String alergias, boolean teveConvulsoes, boolean temDesmaios, String problemasCardiacos,
                       String outrosProblemas, String infoAdicionais) {
@@ -77,11 +88,11 @@ public class DadosSaude {
         return alergias;
     }
 
-    public boolean isTeveConvulsoes() {
+    public boolean teveConvulsoes() {
         return teveConvulsoes;
     }
 
-    public boolean isTemDesmaios() {
+    public boolean temDesmaios() {
         return temDesmaios;
     }
 
@@ -96,4 +107,30 @@ public class DadosSaude {
     public String getInfoAdicionais() {
         return infoAdicionais;
     }
+
+    @Override
+    public String toString() {
+        String convulsoes = "Não";
+        if (teveConvulsoes) convulsoes = "Sim";
+        String desmaios = "Não";
+        if (temDesmaios) desmaios = "Sim";
+
+        return String.format("""
+                Acompanhamento Médico: %s
+                Restrição para Atividade Fisica: %s
+                Medicamentos: %s
+                Alergias: %s
+                Já teve convulsões: %s
+                Tem Desmaios: %s
+                Problemas Cardíacos: %s
+                OutrosProblemas: %s
+                Informações adicionais: %s
+                """,
+                acompanhamentoMedico, restricaoAtividadeFisica, medicamentos, alergias, convulsoes, desmaios,
+                problemasCardiacos, outrosProblemas, infoAdicionais);
+
+
+    }
 }
+
+

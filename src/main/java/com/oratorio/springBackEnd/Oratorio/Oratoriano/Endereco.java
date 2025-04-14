@@ -1,6 +1,16 @@
-package com.oratorio.springBackEnd.Models.Oratorio.FichaMedica;
+package com.oratorio.springBackEnd.Oratorio.Oratoriano;
 
-class Endereco {
+import jakarta.persistence.Embeddable;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Objects;
+
+@Embeddable
+class Endereco implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String CEP;
     private String cidade;
     private String bairro;
@@ -9,7 +19,7 @@ class Endereco {
 
     public Endereco() {}
 
-    public Endereco(String CEP, String cidade, String rua, String bairro, String numero) {
+    public Endereco(String CEP, String cidade, String bairro, String rua, String numero) {
         this.CEP = CEP;
         this.cidade = cidade;
         this.rua = rua;
@@ -17,14 +27,7 @@ class Endereco {
         this.numero = numero;
     }
 
-    @Override
-    public String toString() {
-        return String.format("""
-                CEP: %s | Cidade: %s
-                Bairro: %s | Rua: %s | Número: %s
-                """,
-                CEP, this.cidade, this.bairro, this.rua, this.numero);
-    }
+
     public String getCEP() {
         return CEP;
     }
@@ -59,5 +62,26 @@ class Endereco {
     public void setNumero(String numero) {
         if(numero==null) throw new IllegalArgumentException("Numero Nulo");
         this.numero = numero;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("""
+                CEP: %s | Cidade: %s
+                Bairro: %s | Rua: %s | Número: %s
+                """,
+                CEP, this.cidade, this.bairro, this.rua, this.numero);
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Endereco endereco = (Endereco) o;
+        return Objects.equals(getCEP(), endereco.getCEP()) && Objects.equals(getCidade(), endereco.getCidade()) && Objects.equals(getBairro(), endereco.getBairro()) && Objects.equals(getRua(), endereco.getRua()) && Objects.equals(getNumero(), endereco.getNumero());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCEP(), getCidade(), getBairro(), getRua(), getNumero());
     }
 }
