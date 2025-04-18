@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Oratorio.Oratoriano.DTOs.FichaMedica;
+package com.oratorio.springBackEnd.Oratorio.Oratoriano.DTOs.FichaMedica;
 
 import com.oratorio.springBackEnd.Oratorio.Oratoriano.DTOs.Responsavel.ResponsavelCreationDTO;
 

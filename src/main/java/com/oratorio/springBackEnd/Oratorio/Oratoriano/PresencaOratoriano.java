@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Oratorio.Oratoriano;
+package com.oratorio.springBackEnd.Oratorio.Oratoriano;
 
 import com.oratorio.springBackEnd.Oratorio.Dia.Dia;
 import jakarta.persistence.EmbeddedId;

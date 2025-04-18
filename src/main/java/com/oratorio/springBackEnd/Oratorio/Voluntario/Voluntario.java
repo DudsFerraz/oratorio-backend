@@ -27,8 +27,13 @@ public class Voluntario implements Serializable {
     private String nome;
 
     //coluna sem constraints
-    @Column
-    private LocalDate dataDeNascimento;
+    @Column(nullable = false)
+    private LocalDate dataNascimento;
+
+    @Column(nullable = false)
+    private String email;
+
+
 
     //relacao OneToMany com a entidade PresencaVoluntario //mappedBy indica que o outro lado e dono da relacao
     @OneToMany(mappedBy = "voluntario")
@@ -37,19 +42,19 @@ public class Voluntario implements Serializable {
     public Voluntario() {}
     public Voluntario(String nome) {
         setNome(nome);
-        this.dataDeNascimento = null;
+        this.dataNascimento = null;
         this.presencas = new HashSet<>();
     }
-    public Voluntario(String nome, LocalDate dataDeNascimento) {
+    public Voluntario(String nome, LocalDate dataNascimento) {
         this(nome);
-        setDataDeNascimento(dataDeNascimento);
+        setDataNascimento(dataNascimento);
     }
 
 
 
     @Override
     public String toString() {
-        if (dataDeNascimento == null) {
+        if (dataNascimento == null) {
             return String.format("""
                 %s (Voluntário)| ID: %d
                 Data de nascimento: ? - ? anos
@@ -63,7 +68,7 @@ public class Voluntario implements Serializable {
                 Data de nascimento: %s - %d anos
                 Presencas totais: %d
                 """,
-                nome, id, dataDeNascimento.format(dtf), this.idade(), presencas.size());
+                nome, id, dataNascimento.format(dtf), this.idade(), presencas.size());
     }
     public void addPresenca(Dia dia) {
         presencas.add(new PresencaVoluntario(this,dia));
@@ -72,17 +77,17 @@ public class Voluntario implements Serializable {
         presencas.remove(presenca);
     }
     public int idade() {
-        if (this.dataDeNascimento == null) return -1;
-        return (int) dataDeNascimento.until(LocalDate.now(), ChronoUnit.YEARS);
+        if (this.dataNascimento == null) return -1;
+        return (int) dataNascimento.until(LocalDate.now(), ChronoUnit.YEARS);
     }
     public void setNome(String nome) {
         if (nome == null || nome.isBlank()) throw new IllegalArgumentException("Nome não pode ser nulo ou vazio");
         this.nome = nome;
     }
-    public void setDataDeNascimento(LocalDate dataDeNascimento) {
+    public void setDataNascimento(LocalDate dataDeNascimento) {
         if (dataDeNascimento == null) throw new IllegalArgumentException("Data nula");
         if (dataDeNascimento.isAfter(LocalDate.now())) throw new IllegalArgumentException("Data não pode ser futura");
-        this.dataDeNascimento = dataDeNascimento;
+        this.dataNascimento = dataDeNascimento;
     }
     public String getNome() {
         return nome;
@@ -90,8 +95,8 @@ public class Voluntario implements Serializable {
     public long getId() {
         return id;
     }
-    public LocalDate getDataDeNascimento() {
-        return dataDeNascimento;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
     public List<PresencaVoluntario> getPresencasTotais() {
         return new ArrayList<>(presencas);

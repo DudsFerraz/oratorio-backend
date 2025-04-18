@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Oratorio.Oratoriano;
+package com.oratorio.springBackEnd.Oratorio.Oratoriano;
 
 import com.oratorio.springBackEnd.Documentos.CPF;
 import com.oratorio.springBackEnd.Oratorio.Oratoriano.Responsavel;

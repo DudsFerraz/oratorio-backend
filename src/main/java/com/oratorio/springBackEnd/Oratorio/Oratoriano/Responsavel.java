@@ -69,6 +69,6 @@ public class Responsavel implements Serializable {
                 Responsável por:
                 %s
                 """
-                ,nome,cpf.getFullCpf(),sb);
+                ,nome,cpf.getCpf(),sb);
     }
 }

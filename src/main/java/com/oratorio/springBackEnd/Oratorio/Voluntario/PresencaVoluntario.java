@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Oratorio.Voluntario;
+package com.oratorio.springBackEnd.Oratorio.Voluntario;
 
 import com.oratorio.springBackEnd.Oratorio.Dia.Dia;
 import jakarta.persistence.*;

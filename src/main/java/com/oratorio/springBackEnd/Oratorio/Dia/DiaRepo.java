@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Oratorio.Dia;
+package com.oratorio.springBackEnd.Oratorio.Dia;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

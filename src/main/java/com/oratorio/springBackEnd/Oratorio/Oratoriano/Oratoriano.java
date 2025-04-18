@@ -28,7 +28,7 @@ public class Oratoriano implements Serializable {
     private String nome;
 
     @Column
-    private LocalDate dataDeNascimento;
+    private LocalDate dataNascimento;
 
     @Column
     private CPF cpf;
@@ -59,14 +59,15 @@ public class Oratoriano implements Serializable {
     public Oratoriano() {}
     public Oratoriano(String nome) {
         setNome(nome);
-        this.dataDeNascimento = null;
+        this.dataNascimento = null;
         this.fichaMedica = null;
         this.presencas = new HashSet<>();
         this.responsaveis = new HashSet<>();
+
     }
-    public Oratoriano(String nome, LocalDate dataDeNascimento) {
+    public Oratoriano(String nome, LocalDate dataNascimento) {
         this(nome);
-        setDataDeNascimento(dataDeNascimento);
+        setDataNascimento(dataNascimento);
     }
 
 
@@ -81,8 +82,8 @@ public class Oratoriano implements Serializable {
         presencas.remove(presenca);
     }
     public int idade(){
-        if (this.dataDeNascimento == null) return -1;
-        return (int) dataDeNascimento.until(LocalDate.now(), ChronoUnit.YEARS);
+        if (this.dataNascimento == null) return -1;
+        return (int) dataNascimento.until(LocalDate.now(), ChronoUnit.YEARS);
     }
 
     void setFichaMedica(FichaMedica fichaMedica) {
@@ -103,18 +104,21 @@ public class Oratoriano implements Serializable {
     void setRg(RG rg) {
         this.rg = rg;
     }
-
-
-
+    Endereco getEndereco() {
+        return endereco;
+    }
+    FichaMedica getFichaMedica(){
+        return fichaMedica;
+    }
 
     public void setNome(String nome) {
         if(nome==null || nome.isBlank()) throw new IllegalArgumentException("Nome não pode ser nulo ou vazio");
         this.nome = nome;
     }
-    public void setDataDeNascimento(LocalDate dataDeNascimento) {
+    public void setDataNascimento(LocalDate dataDeNascimento) {
         if(dataDeNascimento==null) throw new IllegalArgumentException("Data nula");
         if(dataDeNascimento.isAfter(LocalDate.now())) throw new IllegalArgumentException("Data não pode ser futura");
-        this.dataDeNascimento = dataDeNascimento;
+        this.dataNascimento = dataDeNascimento;
     }
     public String getNome() {
         return nome;
@@ -122,10 +126,10 @@ public class Oratoriano implements Serializable {
     public long getId() {
         return id;
     }
-    public LocalDate getDataDeNascimento() {
-        return dataDeNascimento;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
-    public String getFichaMedica() {
+    public String getFichaMedicaString() {
         return fichaMedica.toString();
     }
     public List<PresencaOratoriano> getPresencasTotais() {
@@ -152,7 +156,7 @@ public class Oratoriano implements Serializable {
     public RG getRg() {
         return rg;
     }
-    public String getEndereco() {
+    public String getEnderecoString() {
         return endereco.toString();
     }
     public String getTelefone() {
@@ -177,6 +181,9 @@ public class Oratoriano implements Serializable {
     }
     public void setAnoEscola(String anoEscola) {
         this.anoEscola = anoEscola;
+    }
+    public List<ResponsavelOratoriano> getResponsaveisOratoriano() {
+        return new ArrayList<>(responsaveis);
     }
 
 
@@ -226,8 +233,8 @@ public class Oratoriano implements Serializable {
                 %s
                 ----------------------------
                 """
-                ,nome,id,dataDeNascimento.format(dtf),this.idade(),presencas.size(),piscina,getCpf().getFullCpf(),
-                getRg().getFullRg(),getEndereco(),getTelefone(),getEscola(),getAnoEscola(),sb,getFichaMedica());
+                ,nome,id, dataNascimento.format(dtf),this.idade(),presencas.size(),piscina,getCpf().getCpf(),
+                getRg().getFullRg(),getEnderecoString(),getTelefone(),getEscola(),getAnoEscola(),sb,getFichaMedica());
 
 
     }

@@ -35,7 +35,7 @@ class FichaMedica implements Serializable {
 
         this.oratoriano = oratoriano;
         oratoriano.setFichaMedica(this);
-        oratoriano.setDataDeNascimento(dataDeNascimento);
+        oratoriano.setDataNascimento(dataDeNascimento);
         oratoriano.setEndereco(endereco);
         oratoriano.setCpf(cpf);
         oratoriano.setRg(rg);

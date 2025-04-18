@@ -1,4 +1,4 @@
-﻿package com.oratorio.springBackEnd.Documentos;
+package com.oratorio.springBackEnd.Documentos;
 
 import jakarta.persistence.Embeddable;
 

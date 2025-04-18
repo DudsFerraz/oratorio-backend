@@ -1,8 +1,6 @@
 package com.oratorio.springBackEnd.Documentos;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,17 +12,13 @@ public class CPF implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public String fullCpf;
-    public String digits;
-    public String verificadores;
+    public String cpf;
 
     public CPF(){}
     public CPF(String cpf) {
         cpf = cpf.replaceAll("\\.","").replaceAll("-","");
         if(!isCPF(cpf)) throw new IllegalArgumentException("CPF invalido");
-        this.fullCpf = format(cpf);
-        this.digits = cpf.substring(0,9);
-        this.verificadores = cpf.substring(9,11);
+        this.cpf = format(cpf);
     }
 
     public static boolean isCPF(String CPF) {
@@ -91,28 +85,21 @@ public class CPF implements Serializable {
         return sb.toString();
     }
 
-    public String getDigits() {
-        return digits;
-    }
 
-    public String getVerificadores() {
-        return verificadores;
-    }
-
-    public String getFullCpf() {
-        return fullCpf;
+    public String getCpf() {
+        return cpf;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CPF cpf = (CPF) o;
-        return Objects.equals(this.getFullCpf(), cpf.getFullCpf());
+        return Objects.equals(this.getCpf(), cpf.getCpf());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getFullCpf());
+        return Objects.hashCode(getCpf());
     }
 }
 
